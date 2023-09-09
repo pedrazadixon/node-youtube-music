@@ -7,7 +7,8 @@ export { searchAlbumsContinuations } from './searchAlbums.js';
 export { searchArtists } from './searchArtists.js';
 export { searchArtistsContinuations } from './searchArtists.js';
 
-export { searchPlaylists } from './searchPlaylists.js'; // continuations
+export { searchPlaylists } from './searchPlaylists.js';
+export { searchPlaylistsContinuations } from './searchPlaylists.js';
 
 export { getAlbum } from './getAlbum.js';
 export { getArtist } from './getArtist.js';
