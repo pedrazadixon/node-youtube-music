@@ -1,4 +1,6 @@
 import { AlbumType, PageType } from '../constants.js';
+import parseArtistsSuggestionsItem from './parseArtistsSuggestionsItem.js';
+import parseArtistsAlbumItem from './parseArtistsAlbumItem.js';
 
 export default function parseArtistData(
     body,
