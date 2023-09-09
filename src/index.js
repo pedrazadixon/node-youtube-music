@@ -15,8 +15,8 @@ export { getPlaylistTracksContinuations } from './getPlaylistTracks.js';
 
 export { getAlbum } from './getAlbum.js';
 export { getArtist } from './getArtist.js';
+export { getArtistAlbums } from './getArtistAlbums.js';
 
-// getArtistAlbums
 
 export { getRankingsFromCountry } from './getRankingsFromCountry.js';
 export { getSuggestions } from './suggestions.js';
