@@ -3,12 +3,21 @@ import context from './context.js';
 import parseMusicInPlaylistItem from './parsers/parseMusicInPlaylistItem.js';
 
 
-export const parseGetPlaylistTracksBody = (body) => {
-  const content =
-    body.contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content
-      .sectionListRenderer.contents[0];
-  const { contents } =
-    content.musicPlaylistShelfRenderer ?? content.musicCarouselShelfRenderer;
+export const parseGetPlaylistTracksBody = (body, isContinuation = false) => {
+
+  let visitorData = body?.responseContext?.visitorData
+
+  if (isContinuation) {
+    var { contents, continuations } = body.continuationContents.musicPlaylistShelfContinuation;
+  } else {
+    var { contents, continuations } =
+      body.contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content
+        .sectionListRenderer.contents[0].musicPlaylistShelfRenderer;
+  }
+
+  if (continuations !== undefined) {
+    var continuation = continuations[0].nextContinuationData.continuation;
+  }
 
   const results = [];
 
@@ -22,7 +31,11 @@ export const parseGetPlaylistTracksBody = (body) => {
       console.error(e);
     }
   });
-  return results;
+  return {
+    tracks: results,
+    vd: visitorData,
+    ...(continuations) && { continuation }
+  };
 };
 
 export async function getPlaylistTracks(
@@ -50,6 +63,31 @@ export async function getPlaylistTracks(
       }
     );
     return parseGetPlaylistTracksBody(JSON.parse(response.body));
+  } catch (error) {
+    console.error(`Error in getPlaylistTracks: ${error}`);
+    return [];
+  }
+}
+
+export async function getPlaylistTracksContinuations(
+  continuation,
+  visitorData
+) {
+  var jsonContext = { ...context.body }
+  jsonContext.context.client.visitorData = visitorData
+  try {
+    const response = await got.post(
+      `https://music.youtube.com/youtubei/v1/browse?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30&continuation=${continuation}`,
+      {
+        json: jsonContext,
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+          origin: 'https://music.youtube.com',
+        },
+      }
+    );
+    return parseGetPlaylistTracksBody(JSON.parse(response.body), true);
   } catch (error) {
     console.error(`Error in getPlaylistTracks: ${error}`);
     return [];
