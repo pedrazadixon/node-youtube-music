@@ -89,14 +89,6 @@ export default function parseArtistData(
         console.error("Couldn't get suggestedArtists", e);
     }
 
-    let subscribers;
-    try {
-        subscribers =
-            body.header.musicImmersiveHeaderRenderer.subscriptionButton
-                .subscribeButtonRenderer.subscriberCountWithSubscribeText.runs[0].text;
-    } catch (e) {
-        console.error("Couldn't get subscribers", e);
-    }
     return {
         artistId,
         name,
@@ -106,6 +98,5 @@ export default function parseArtistData(
         thumbnails,
         tracksPlaylistId,
         suggestedArtists,
-        subscribers,
     };
 };

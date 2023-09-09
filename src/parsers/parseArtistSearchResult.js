@@ -26,18 +26,9 @@ export default function parseArtistSearchResult(content) {
         console.error("Couldn't get thumbnailUrl", e);
     }
 
-    let subscribers;
-    try {
-        subscribers =
-            content.musicResponsiveListItemRenderer.flexColumns[1]
-                .musicResponsiveListItemFlexColumnRenderer.text.runs[2].text;
-    } catch (e) {
-        console.error("Couldn't get subscribers", e);
-    }
     return {
         name,
         artistId,
-        thumbnailUrl,
-        subscribers,
+        thumbnailUrl
     };
 };

@@ -15,16 +15,6 @@ export default function parseArtistsSuggestionsItem(item) {
         console.error("Couldn't get name", e);
     }
 
-    let subscribers;
-    try {
-        subscribers = item.musicTwoRowItemRenderer.subtitle.runs[0].text;
-        const subscribersArray = subscribers.split(' ');
-        subscribersArray.pop();
-        subscribers = subscribersArray.join(' ');
-    } catch (e) {
-        console.error("Couldn't get subscribers", e);
-    }
-
     let thumbnailUrl;
     try {
         thumbnailUrl =
@@ -36,7 +26,6 @@ export default function parseArtistsSuggestionsItem(item) {
     return {
         artistId,
         name,
-        subscribers,
         thumbnailUrl,
     };
 };
