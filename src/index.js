@@ -1,7 +1,9 @@
 export { searchTracks } from './searchTracks.js';
 export { searchTracksContinuations } from './searchTracks.js';
 
-export { searchAlbums } from './searchAlbums.js'; // continuations
+export { searchAlbums } from './searchAlbums.js';
+export { searchAlbumsContinuations } from './searchAlbums.js';
+
 export { searchPlaylists } from './searchPlaylists.js'; // continuations
 export { searchArtists } from './searchArtists.js'; // continuations
 
