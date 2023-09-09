@@ -31,7 +31,8 @@ yarn add https://github.com/pedrazadixon/node-youtube-music
 
 ```ts
 import {
-  searchMusics,
+  searchTracks,
+  searchTracksContinuations,
   searchAlbums,
   searchPlaylists,
   getSuggestions,
@@ -41,7 +42,9 @@ import {
   getArtist,
 } from "node-youtube-music";
 
-const musics = await searchMusics("Never gonna give you up");
+const musics = await searchTracks("Never gonna give you up");
+
+const musics = await searchTracksContinuations("continuation_string");
 
 const albums = await searchAlbums("Human after all");
 
