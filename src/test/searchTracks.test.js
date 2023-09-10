@@ -29,7 +29,7 @@ test('searchTracks: test if track has correct required properties', async () => 
 })
 
 
-test('searchTracks: test searchTracks continuations', async () => {
+test('searchTracksContinuations: test if continuations works correctly', async () => {
     expect(searchResult).toHaveProperty('continuation')
     let continuations = await searchTracksContinuations(searchResult.continuation);
     expect(continuations.tracks.length).toBeGreaterThan(0)
