@@ -6,7 +6,7 @@ let album1 = {}
 let album2 = {}
 
 test('searchAlbums: test if find albums', async () => {
-    const query = "hello"
+    const query = "Daft Punk"
     searchResult = await searchAlbums(query);
     expect(searchResult.albums.length).toBeGreaterThan(0)
     album1 = searchResult.albums[0]
@@ -25,8 +25,8 @@ test('searchAlbums: test if album has correct required properties', async () => 
     expect(album1.title).toBeTypeOf('string')
     expect(album1.type).toBeTypeOf('string')
     expect(album1.thumbnailUrl).toBeTypeOf('string')
-    expect(album1.artist).toBeTypeOf('string')
-    expect(album1.artistId).toBeTypeOf('string')
+    expect(album1.artist).toBeTypeOf('string') // TODO: should be object
+    expect(album1.artistId).toBeTypeOf('string') // TODO: should be object
     expect(album1.year).toBeTypeOf('string')
 })
 

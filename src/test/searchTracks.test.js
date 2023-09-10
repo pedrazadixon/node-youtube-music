@@ -6,7 +6,7 @@ let track1 = {}
 let track2 = {}
 
 test('searchTracks: test if find tracks', async () => {
-    const query = "hello"
+    const query = "Hello"
     searchResult = await searchTracks(query);
     expect(searchResult.tracks.length).toBeGreaterThan(0)
     track1 = searchResult.tracks[0]

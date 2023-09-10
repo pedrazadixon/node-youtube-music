@@ -6,7 +6,7 @@ let artist1 = {}
 let artist2 = {}
 
 test('searchArtists: test if find artists', async () => {
-    const query = "Daft Punk"
+    const query = "Bob"
     searchResult = await searchArtists(query);
     expect(searchResult.artists.length).toBeGreaterThan(0)
     artist1 = searchResult.artists[0]
