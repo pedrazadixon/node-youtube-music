@@ -9,12 +9,16 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "scripts": {
+    "test": "vitest"
+  },
   "author": "pedrazadixon",
   "license": "MIT",
   "dependencies": {
     "got": "^12.5.3"
   },
   "devDependencies": {
-    "eslint": "^8.33.0"
+    "eslint": "^8.33.0",
+    "vitest": "^0.34.4"
   }
 }

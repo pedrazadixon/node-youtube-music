@@ -13,10 +13,11 @@ export { searchPlaylistsContinuations } from './searchPlaylists.js';
 export { getPlaylistTracks } from './getPlaylistTracks.js';
 export { getPlaylistTracksContinuations } from './getPlaylistTracks.js';
 
+export { getArtistAlbums } from './getArtistAlbums.js';
+export { getArtistAlbumsContinuations } from './getArtistAlbums.js';
+
 export { getAlbum } from './getAlbum.js';
 export { getArtist } from './getArtist.js';
-export { getArtistAlbums } from './getArtistAlbums.js';
-
 
 export { getRankingsFromCountry } from './getRankingsFromCountry.js';
 export { getSuggestions } from './suggestions.js';

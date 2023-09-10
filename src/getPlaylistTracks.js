@@ -3,18 +3,21 @@ import context from './context.js';
 import parseMusicInPlaylistItem from './parsers/parseMusicInPlaylistItem.js';
 
 
-export const parseGetPlaylistTracksBody = (body, isContinuation = false) => {
+export const parseGetPlaylistTracksBody = (body, isContinuation = false, oldVisitorData) => {
 
   let visitorData = body?.responseContext?.visitorData
-
+  
   if (isContinuation) {
+    visitorData = oldVisitorData
     var { contents, continuations } = body.continuationContents.musicPlaylistShelfContinuation;
   } else {
     var { contents, continuations } =
-      body.contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content
-        .sectionListRenderer.contents[0].musicPlaylistShelfRenderer;
+    body.contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content
+    .sectionListRenderer.contents[0].musicPlaylistShelfRenderer;
   }
 
+  console.log("🚀 ~  ~ visitorData:", visitorData)
+  
   if (continuations !== undefined) {
     var continuation = continuations[0].nextContinuationData.continuation;
   }
@@ -87,7 +90,7 @@ export async function getPlaylistTracksContinuations(
         },
       }
     );
-    return parseGetPlaylistTracksBody(JSON.parse(response.body), true);
+    return parseGetPlaylistTracksBody(JSON.parse(response.body), true, visitorData);
   } catch (error) {
     console.error(`Error in getPlaylistTracks: ${error}`);
     return [];
