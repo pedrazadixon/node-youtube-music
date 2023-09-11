@@ -41,21 +41,16 @@ export default function parseAlbumItem(content) {
 
     let artist;
     try {
-        artist =
-            content.musicResponsiveListItemRenderer.flexColumns[1]
-                .musicResponsiveListItemFlexColumnRenderer.text.runs[2].text;
+        artist = {
+            name: content.musicResponsiveListItemRenderer.flexColumns[1]
+                .musicResponsiveListItemFlexColumnRenderer.text.runs[2].text,
+            artistId:
+                content.musicResponsiveListItemRenderer.flexColumns[1]
+                    .musicResponsiveListItemFlexColumnRenderer.text.runs[2]
+                    .navigationEndpoint?.browseEndpoint.browseId
+        }
     } catch (err) {
         console.error("Couldn't parse artist", err);
-    }
-
-    let artistId;
-    try {
-        artistId =
-            content.musicResponsiveListItemRenderer.flexColumns[1]
-                .musicResponsiveListItemFlexColumnRenderer.text.runs[2]
-                .navigationEndpoint?.browseEndpoint.browseId;
-    } catch (err) {
-        console.error("Couldn't parse artistId", err);
     }
 
     let year;
@@ -81,7 +76,6 @@ export default function parseAlbumItem(content) {
         type,
         thumbnailUrl,
         artist,
-        artistId,
         year,
         isExplicit,
     };

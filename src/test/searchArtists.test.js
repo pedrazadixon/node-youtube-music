@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest'
 import { searchArtists, searchArtistsContinuations } from '../index.js'
+import { artistSearchStructure } from './structures/structures.js';
 
 let searchResult;
 let artist1 = {}
@@ -13,13 +14,7 @@ test('searchArtists: test if find artists', async () => {
 })
 
 test('searchArtists: test if artist has correct required properties', async () => {
-    expect(artist1).toHaveProperty('name')
-    expect(artist1).toHaveProperty('artistId')
-    expect(artist1).toHaveProperty('thumbnailUrl')
-
-    expect(artist1.name).toBeTypeOf('string')
-    expect(artist1.artistId).toBeTypeOf('string')
-    expect(artist1.thumbnailUrl).toBeTypeOf('string')
+    expect(artist1).toMatchObject(artistSearchStructure)
 })
 
 test('searchArtistsContinuations:  test if continuations works correctly', async () => {

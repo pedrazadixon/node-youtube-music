@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest'
 import { getArtistAlbums, getArtistAlbumsContinuations } from '../index.js'
+import { artistAlbumStructure } from './structures/structures.js';
 
 let searchResult;
 let album1 = {}
@@ -13,21 +14,8 @@ test('getArtistAlbums: test if find albums', async () => {
 })
 
 test('getArtistAlbums: test if album has correct required properties', async () => {
-    expect(album1).toHaveProperty('albumId')
-    expect(album1).toHaveProperty('title')
-    expect(album1).toHaveProperty('type')
-    expect(album1).toHaveProperty('year')
-    expect(album1).toHaveProperty('thumbnailUrl')
-    // expect(album1).toHaveProperty('artist') // TODO: missing, should be object
-    // expect(album1).toHaveProperty('artistId') // TODO: missing, should be object
-
-    expect(album1.albumId).toBeTypeOf('string')
-    expect(album1.title).toBeTypeOf('string')
-    expect(album1.type).toBeTypeOf('string')
-    expect(album1.year).toBeTypeOf('string')
-    expect(album1.thumbnailUrl).toBeTypeOf('string')
-    // expect(album1.artist).toBeTypeOf('string') // TODO: missing, should be object
-    // expect(album1.artistId).toBeTypeOf('string') // TODO: missing, should be object
+    console.log("🚀 ~ album1:", album1)
+    expect(album1).toMatchObject(artistAlbumStructure)
 })
 
 test('getArtistAlbumsContinuations: test if continuations works correctly', async () => {

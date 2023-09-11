@@ -62,7 +62,6 @@ export const getArtistAlbums = async (
     }
 }
 
-
 export const getArtistAlbumsContinuations = async (
     continuation,
     visitorData
