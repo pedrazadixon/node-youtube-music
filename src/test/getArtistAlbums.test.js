@@ -14,7 +14,6 @@ test('getArtistAlbums: test if find albums', async () => {
 })
 
 test('getArtistAlbums: test if album has correct required properties', async () => {
-    console.log("🚀 ~ album1:", album1)
     expect(album1).toMatchObject(artistAlbumStructure)
 })
 
