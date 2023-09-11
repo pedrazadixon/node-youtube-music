@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest'
 import { searchTracks, searchTracksContinuations } from '../index.js'
+import { trackStructure } from './structures/structures.js';
 
 let searchResult;
 let track1 = {}
@@ -13,19 +14,7 @@ test('searchTracks: test if find tracks', async () => {
 })
 
 test('searchTracks: test if track has correct required properties', async () => {
-    expect(track1).toHaveProperty('trackId')
-    expect(track1).toHaveProperty('title')
-    expect(track1).toHaveProperty('artists')
-    expect(track1).toHaveProperty('album')
-    expect(track1).toHaveProperty('thumbnailUrl')
-    expect(track1).toHaveProperty('duration')
-
-    expect(track1.trackId).toBeTypeOf('string')
-    expect(track1.title).toBeTypeOf('string')
-    expect(track1.artists).toBeTypeOf('object')
-    expect(track1.album).toBeTypeOf('object')
-    expect(track1.thumbnailUrl).toBeTypeOf('string')
-    expect(track1.duration).toBeTypeOf('object')
+    expect(track1).toMatchObject(trackStructure)
 })
 
 
