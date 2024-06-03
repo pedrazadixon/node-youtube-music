@@ -8,7 +8,7 @@ export async function getArtist(
   options
 ) {
   const response = await got.post(
-    'https://music.youtube.com/youtubei/v1/browse?key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30',
+    'https://music.youtube.com/youtubei/v1/browse?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30',
     {
       json: {
         ...context.body,

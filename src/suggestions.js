@@ -26,7 +26,7 @@ export const parseGetSuggestionsBody = (body) => {
 
 export async function getSuggestions(videoId) {
   const response = await got.post(
-    'https://music.youtube.com/youtubei/v1/next',
+    'https://music.youtube.com/youtubei/v1/next?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30',
     {
       json: {
         ...context.body,
@@ -37,10 +37,6 @@ export async function getSuggestions(videoId) {
         tunerSettingValue: 'AUTOMIX_SETTING_NORMAL',
         playlistId: `RDAMVM${videoId}`,
         videoId,
-      },
-      searchParams: {
-        alt: 'json',
-        key: 'AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30',
       },
       headers: {
         'User-Agent':
