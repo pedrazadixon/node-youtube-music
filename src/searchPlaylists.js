@@ -1,6 +1,6 @@
-import got from 'got';
-import context from './context.js';
-import parsePlaylistItem from './parsers/parsePlaylistItem.js';
+import client from "./services/client.js";
+import context from "./context.js";
+import parsePlaylistItem from "./parsers/parsePlaylistItem.js";
 
 export const parseSearchPlaylistsBody = (
   body,
@@ -17,7 +17,8 @@ export const parseSearchPlaylistsBody = (
 
     var continuations;
     try {
-      continuations = body.continuationContents.musicShelfContinuation.continuations;
+      continuations =
+        body.continuationContents.musicShelfContinuation.continuations;
     } catch (e) {
       console.error("Couldn't get continuations", e);
     }
@@ -25,7 +26,8 @@ export const parseSearchPlaylistsBody = (
     var contents;
     try {
       contents =
-        body.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content.sectionListRenderer.contents[0].musicShelfRenderer.contents;
+        body.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content
+          .sectionListRenderer.contents[0].musicShelfRenderer.contents;
     } catch (e) {
       console.error("Couldn't get contents", e);
     }
@@ -33,7 +35,8 @@ export const parseSearchPlaylistsBody = (
     var continuations;
     try {
       continuations =
-        body.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content.sectionListRenderer.contents[0].musicShelfRenderer.continuations;
+        body.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content
+          .sectionListRenderer.contents[0].musicShelfRenderer.continuations;
     } catch (e) {
       console.error("Couldn't get continuations", e);
     }
@@ -62,32 +65,24 @@ export const parseSearchPlaylistsBody = (
 
   return {
     playlists: results,
-    ...(continuations) && { continuation },
+    ...(continuations && { continuation }),
   };
 };
 
-export async function searchPlaylists(
-  query,
-  options
-) {
-  const response = await got.post(
-    'https://music.youtube.com/youtubei/v1/search?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30',
-    {
-      json: {
-        ...context.body,
-        params: 'EgWKAQIoAWoKEAoQAxAEEAUQCQ%3D%3D',
-        query,
-      },
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-        origin: 'https://music.youtube.com',
-      },
-    }
-  );
+export async function searchPlaylists(query, options) {
   try {
+    const response = await client
+      .post("search", {
+        json: {
+          ...context.body,
+          params: "EgWKAQIoAWoKEAoQAxAEEAUQCQ==",
+          query,
+        },
+      })
+      .json();
+
     return parseSearchPlaylistsBody(
-      JSON.parse(response.body),
+      response,
       options?.onlyOfficialPlaylists ?? false
     );
   } catch (e) {
@@ -96,27 +91,20 @@ export async function searchPlaylists(
   }
 }
 
-export async function searchPlaylistsContinuations(
-  continuation,
-  options
-) {
-  const response = await got.post(
-    `https://music.youtube.com/youtubei/v1/search?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30&continuation=${continuation}`,
-    {
-      json: {
-        ...context.body,
-        params: 'EgWKAQIoAWoKEAoQAxAEEAUQCQ%3D%3D',
-      },
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-        origin: 'https://music.youtube.com',
-      },
-    }
-  );
+export async function searchPlaylistsContinuations(continuation, options) {
   try {
+    const response = await client
+      .post("search", {
+        json: {
+          ...context.body,
+          params: "EgWKAQIoAWoKEAoQAxAEEAUQCQ==",
+        },
+        searchParams: { continuation },
+      })
+      .json();
+
     return parseSearchPlaylistsBody(
-      JSON.parse(response.body),
+      response.body,
       options?.onlyOfficialPlaylists ?? false,
       true
     );

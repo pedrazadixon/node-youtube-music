@@ -1,7 +1,7 @@
-import got from 'got';
-import context from './context.js';
-import parseAlbumHeader from './parsers/parseAlbumHeader.js';
-import parseMusicInAlbumItem from './parsers/parseMusicInAlbumItem.js';
+import client from "./services/client.js";
+import context from "./context.js";
+import parseAlbumHeader from "./parsers/parseAlbumHeader.js";
+import parseMusicInAlbumItem from "./parsers/parseMusicInAlbumItem.js";
 
 export const parseGetAlbumBody = (body, albumId) => {
   const { contents } =
@@ -35,25 +35,17 @@ export const parseGetAlbumBody = (body, albumId) => {
   };
 };
 
-export async function getAlbum(
-  albumId
-) {
-  const response = await got.post(
-    'https://music.youtube.com/youtubei/v1/browse?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30',
-    {
-      json: {
-        ...context.body,
-        browseId: albumId,
-      },
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-        origin: 'https://music.youtube.com',
-      },
-    }
-  );
+export async function getAlbum(albumId) {
   try {
-    return parseGetAlbumBody(JSON.parse(response.body), albumId);
+    const response = await client
+      .post("browse", {
+        json: {
+          ...context.body,
+          browseId: albumId,
+        },
+      })
+      .json();
+    return parseGetAlbumBody(response, albumId);
   } catch (e) {
     console.error(e);
     return [];

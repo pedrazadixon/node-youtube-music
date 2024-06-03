@@ -1,10 +1,11 @@
-import got from 'got';
-import context from './context.js';
-import parseAlbumItem from './parsers/parseAlbumItem.js';
+import client from "./services/client.js";
+import context from "./context.js";
+import parseAlbumItem from "./parsers/parseAlbumItem.js";
 
 export const parseSearchAlbumsBody = (body, isContinuation = false) => {
   if (isContinuation) {
-    var { contents, continuations } = body.continuationContents.musicShelfContinuation;
+    var { contents, continuations } =
+      body.continuationContents.musicShelfContinuation;
   } else {
     var { contents, continuations } =
       body.contents.tabbedSearchResultsRenderer.tabs[0].tabRenderer.content.sectionListRenderer.contents.pop()
@@ -30,29 +31,23 @@ export const parseSearchAlbumsBody = (body, isContinuation = false) => {
 
   return {
     albums: results,
-    ...(continuations) && { continuation }
+    ...(continuations && { continuation }),
   };
-
 };
 
 export async function searchAlbums(query) {
-  const response = await got.post(
-    'https://music.youtube.com/youtubei/v1/search?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30',
-    {
-      json: {
-        ...context.body,
-        params: 'EgWKAQIYAWoKEAkQAxAEEAUQCg%3D%3D',
-        query,
-      },
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-        origin: 'https://music.youtube.com',
-      },
-    }
-  );
   try {
-    return parseSearchAlbumsBody(JSON.parse(response.body));
+    const response = await client
+      .post("search", {
+        json: {
+          ...context.body,
+          params: "EgWKAQIYAWoKEAkQAxAEEAUQCg==",
+          query,
+        },
+      })
+      .json();
+
+    return parseSearchAlbumsBody(response);
   } catch (e) {
     console.error(e);
     return [];
@@ -60,22 +55,18 @@ export async function searchAlbums(query) {
 }
 
 export async function searchAlbumsContinuations(continuation) {
-  const response = await got.post(
-    `https://music.youtube.com/youtubei/v1/search?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30&continuation=${continuation}`,
-    {
-      json: {
-        ...context.body,
-        params: 'EgWKAQIYAWoKEAkQAxAEEAUQCg%3D%3D',
-      },
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-        origin: 'https://music.youtube.com',
-      },
-    }
-  );
   try {
-    return parseSearchAlbumsBody(JSON.parse(response.body), true);
+    const response = await client
+      .post("search", {
+        json: {
+          ...context.body,
+          params: "EgWKAQIYAWoKEAkQAxAEEAUQCg==",
+        },
+        searchParams: { continuation },
+      })
+      .json();
+
+    return parseSearchAlbumsBody(response, true);
   } catch (e) {
     console.error(e);
     return [];

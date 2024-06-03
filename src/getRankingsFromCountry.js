@@ -1,32 +1,22 @@
-import got from 'got';
-import context from './context.js';
-import parseRankingData from './parsers/parseRankingData.js';
+import client from "./services/client.js";
+import context from "./context.js";
+import parseRankingData from "./parsers/parseRankingData.js";
 
-
-export async function getRankingsFromCountry(
-  countryIdIso = 'ZZ',
-  options
-) {
-  const response = await got.post(
-    'https://music.youtube.com/youtubei/v1/browse?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30',
-    {
-      json: {
-        ...context.body,
-        browseId: "FEmusic_charts",
-        formData: {
-          selectedValues: [countryIdIso]
-        },
-      },
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-        'Accept-Language': options?.lang ?? 'en',
-        origin: 'https://music.youtube.com',
-      },
-    }
-  );
+export async function getRankingsFromCountry(countryIdIso = "ZZ", options) {
   try {
-    const responde = parseRankingData(JSON.parse(response.body));
+    const response = await client
+      .post("browse", {
+        json: {
+          ...context.body,
+          browseId: "FEmusic_charts",
+          formData: {
+            selectedValues: [countryIdIso],
+          },
+        },
+      })
+      .json();
+
+    const responde = parseRankingData(response);
     responde.isoCode = countryIdIso;
     return responde;
   } catch (e) {

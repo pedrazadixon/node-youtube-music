@@ -1,23 +1,26 @@
-import got from 'got';
-import context from './context.js';
-import parseMusicInPlaylistItem from './parsers/parseMusicInPlaylistItem.js';
+import client from "./services/client.js";
+import context from "./context.js";
+import parseMusicInPlaylistItem from "./parsers/parseMusicInPlaylistItem.js";
 
+export const parseGetPlaylistTracksBody = (
+  body,
+  isContinuation = false,
+  oldVisitorData
+) => {
+  let visitorData = body?.responseContext?.visitorData;
 
-export const parseGetPlaylistTracksBody = (body, isContinuation = false, oldVisitorData) => {
-
-  let visitorData = body?.responseContext?.visitorData
-  
   if (isContinuation) {
-    visitorData = oldVisitorData
-    var { contents, continuations } = body.continuationContents.musicPlaylistShelfContinuation;
+    visitorData = oldVisitorData;
+    var { contents, continuations } =
+      body.continuationContents.musicPlaylistShelfContinuation;
   } else {
     var { contents, continuations } =
-    body.contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer.content
-    .sectionListRenderer.contents[0].musicPlaylistShelfRenderer;
+      body.contents.singleColumnBrowseResultsRenderer.tabs[0].tabRenderer
+        .content.sectionListRenderer.contents[0].musicPlaylistShelfRenderer;
   }
 
-  console.log("🚀 ~  ~ visitorData:", visitorData)
-  
+  console.log("🚀 ~  ~ visitorData:", visitorData);
+
   if (continuations !== undefined) {
     var continuation = continuations[0].nextContinuationData.continuation;
   }
@@ -37,35 +40,28 @@ export const parseGetPlaylistTracksBody = (body, isContinuation = false, oldVisi
   return {
     tracks: results,
     vd: visitorData,
-    ...(continuations) && { continuation }
+    ...(continuations && { continuation }),
   };
 };
 
-export async function getPlaylistTracks(
-  playlistId
-) {
+export async function getPlaylistTracks(playlistId) {
   let browseId;
 
-  if (!playlistId.startsWith('VL')) {
-    browseId = 'VL' + playlistId;
+  if (!playlistId.startsWith("VL")) {
+    browseId = "VL" + playlistId;
   }
 
   try {
-    const response = await got.post(
-      'https://music.youtube.com/youtubei/v1/browse?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30',
-      {
+    const response = await client
+      .post("browse", {
         json: {
           ...context.body,
           browseId,
         },
-        headers: {
-          'User-Agent':
-            'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-          origin: 'https://music.youtube.com',
-        },
-      }
-    );
-    return parseGetPlaylistTracksBody(JSON.parse(response.body));
+      })
+      .json();
+
+    return parseGetPlaylistTracksBody(response);
   } catch (error) {
     console.error(`Error in getPlaylistTracks: ${error}`);
     return [];
@@ -76,21 +72,17 @@ export async function getPlaylistTracksContinuations(
   continuation,
   visitorData
 ) {
-  var jsonContext = { ...context.body }
-  jsonContext.context.client.visitorData = visitorData
+  var jsonContext = { ...context.body };
+  jsonContext.context.client.visitorData = visitorData;
   try {
-    const response = await got.post(
-      `https://music.youtube.com/youtubei/v1/browse?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30&continuation=${continuation}`,
-      {
+    const response = await client
+      .post("browse", {
         json: jsonContext,
-        headers: {
-          'User-Agent':
-            'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-          origin: 'https://music.youtube.com',
-        },
-      }
-    );
-    return parseGetPlaylistTracksBody(JSON.parse(response.body), true, visitorData);
+        searchParams: { continuation },
+      })
+      .json();
+
+    return parseGetPlaylistTracksBody(response, true, visitorData);
   } catch (error) {
     console.error(`Error in getPlaylistTracks: ${error}`);
     return [];

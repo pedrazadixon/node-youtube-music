@@ -1,30 +1,18 @@
-import got from 'got';
-import context from './context.js';
-import parseArtistData from './parsers/parseArtistData.js';
+import client from "./services/client.js";
+import context from "./context.js";
+import parseArtistData from "./parsers/parseArtistData.js";
 
-
-export async function getArtist(
-  artistId,
-  options
-) {
-  const response = await got.post(
-    'https://music.youtube.com/youtubei/v1/browse?alt=json&key=AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30',
-    {
-      json: {
-        ...context.body,
-        browseId: artistId,
-      },
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-        'Accept-Language': options?.lang ?? 'en',
-        origin: 'https://music.youtube.com',
-      },
-    }
-  );
-
+export async function getArtist(artistId, options) {
   try {
-    return parseArtistData(JSON.parse(response.body), artistId);
+    const response = await client
+      .post("browse", {
+        json: {
+          ...context.body,
+          browseId: artistId,
+        },
+      })
+      .json();
+    return parseArtistData(response, artistId);
   } catch (e) {
     console.error(e);
     return {};
