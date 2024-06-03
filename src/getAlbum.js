@@ -37,14 +37,14 @@ export const parseGetAlbumBody = (body, albumId) => {
 
 export async function getAlbum(albumId) {
   try {
-    const response = await client
-      .post("browse", {
+    const response = await (
+      await client.post("browse", {
         json: {
           ...context.body,
           browseId: albumId,
         },
       })
-      .json();
+    ).json();
     return parseGetAlbumBody(response, albumId);
   } catch (e) {
     console.error(e);

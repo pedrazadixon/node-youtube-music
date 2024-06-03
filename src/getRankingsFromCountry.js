@@ -4,8 +4,8 @@ import parseRankingData from "./parsers/parseRankingData.js";
 
 export async function getRankingsFromCountry(countryIdIso = "ZZ", options) {
   try {
-    const response = await client
-      .post("browse", {
+    const response = await (
+      await client.post("browse", {
         json: {
           ...context.body,
           browseId: "FEmusic_charts",
@@ -14,7 +14,7 @@ export async function getRankingsFromCountry(countryIdIso = "ZZ", options) {
           },
         },
       })
-      .json();
+    ).json();
 
     const responde = parseRankingData(response);
     responde.isoCode = countryIdIso;

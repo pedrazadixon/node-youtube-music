@@ -37,15 +37,15 @@ export const parseSearchTracksBody = (body, isContinuation = false) => {
 
 export async function searchTracks(query) {
   try {
-    const response = await client
-      .post("search", {
+    const response = await (
+      await client.post("search", {
         json: {
           ...context.body,
           params: "EgWKAQIIAWoKEAoQCRADEAQQBQ==",
           query,
         },
       })
-      .json();
+    ).json();
 
     return parseSearchTracksBody(response);
   } catch (e) {
@@ -56,15 +56,15 @@ export async function searchTracks(query) {
 
 export async function searchTracksContinuations(continuation) {
   try {
-    const response = await client
-      .post("search", {
+    const response = await (
+      await client.post("search", {
         json: {
           ...context.body,
           params: "EgWKAQIIAWoKEAoQCRADEAQQBQ==",
         },
         searchParams: { continuation },
       })
-      .json();
+    ).json();
 
     return parseSearchTracksBody(response, true);
   } catch (e) {

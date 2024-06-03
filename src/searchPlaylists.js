@@ -71,15 +71,15 @@ export const parseSearchPlaylistsBody = (
 
 export async function searchPlaylists(query, options) {
   try {
-    const response = await client
-      .post("search", {
+    const response = await (
+      await client.post("search", {
         json: {
           ...context.body,
           params: "EgWKAQIoAWoKEAoQAxAEEAUQCQ==",
           query,
         },
       })
-      .json();
+    ).json();
 
     return parseSearchPlaylistsBody(
       response,
@@ -93,15 +93,15 @@ export async function searchPlaylists(query, options) {
 
 export async function searchPlaylistsContinuations(continuation, options) {
   try {
-    const response = await client
-      .post("search", {
+    const response = await (
+      await client.post("search", {
         json: {
           ...context.body,
           params: "EgWKAQIoAWoKEAoQAxAEEAUQCQ==",
         },
         searchParams: { continuation },
       })
-      .json();
+    ).json();
 
     return parseSearchPlaylistsBody(
       response.body,

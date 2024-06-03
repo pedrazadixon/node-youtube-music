@@ -37,15 +37,15 @@ export const parseArtistsSearchBody = (body, isContinuation = false) => {
 
 export async function searchArtists(query, options) {
   try {
-    const response = await client
-      .post("search", {
+    const response = await (
+      await client.post("search", {
         json: {
           ...context.body,
           params: "EgWKAQIgAWoKEAMQBBAJEAoQBQ==",
           query,
         },
       })
-      .json();
+    ).json();
 
     return parseArtistsSearchBody(response);
   } catch (e) {
@@ -56,15 +56,15 @@ export async function searchArtists(query, options) {
 
 export async function searchArtistsContinuations(continuation, options) {
   try {
-    const response = await client
-      .post("search", {
+    const response = await (
+      await client.post("search", {
         json: {
           ...context.body,
           params: "EgWKAQIgAWoKEAMQBBAJEAoQBQ==",
         },
         searchParams: { continuation },
       })
-      .json();
+    ).json();
 
     return parseArtistsSearchBody(response, true);
   } catch (e) {

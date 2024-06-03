@@ -41,14 +41,15 @@ export const getArtistAlbums = async (artistId) => {
   }
 
   try {
-    const response = await client
-      .post("browse", {
+    const response = await (
+      await client.post("browse", {
         json: {
           ...context.body,
           browseId: artistId,
         },
       })
-      .json();
+    ).json();
+
     return parseListArtistAlbums(response);
   } catch (error) {
     console.error(`Error in getArtistAlbums: ${error}`);
@@ -64,12 +65,12 @@ export const getArtistAlbumsContinuations = async (
   jsonContext.context.client.visitorData = visitorData;
 
   try {
-    const response = await client
-      .post("browse", {
+    const response = await (
+      await client.post("browse", {
         json: jsonContext,
         searchParams: { continuation },
       })
-      .json();
+    ).json();
     return parseListArtistAlbums(response, true, visitorData);
   } catch (error) {
     console.error(`Error in getArtistAlbumsContinuations: ${error}`);

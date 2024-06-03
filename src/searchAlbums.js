@@ -37,15 +37,15 @@ export const parseSearchAlbumsBody = (body, isContinuation = false) => {
 
 export async function searchAlbums(query) {
   try {
-    const response = await client
-      .post("search", {
+    const response = await (
+      await client.post("search", {
         json: {
           ...context.body,
           params: "EgWKAQIYAWoKEAkQAxAEEAUQCg==",
           query,
         },
       })
-      .json();
+    ).json();
 
     return parseSearchAlbumsBody(response);
   } catch (e) {
@@ -56,15 +56,15 @@ export async function searchAlbums(query) {
 
 export async function searchAlbumsContinuations(continuation) {
   try {
-    const response = await client
-      .post("search", {
+    const response = await (
+      await client.post("search", {
         json: {
           ...context.body,
           params: "EgWKAQIYAWoKEAkQAxAEEAUQCg==",
         },
         searchParams: { continuation },
       })
-      .json();
+    ).json();
 
     return parseSearchAlbumsBody(response, true);
   } catch (e) {

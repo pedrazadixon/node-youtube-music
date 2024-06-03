@@ -4,14 +4,14 @@ import parseArtistData from "./parsers/parseArtistData.js";
 
 export async function getArtist(artistId, options) {
   try {
-    const response = await client
-      .post("browse", {
+    const response = await (
+      await client.post("browse", {
         json: {
           ...context.body,
           browseId: artistId,
         },
       })
-      .json();
+    ).json();
     return parseArtistData(response, artistId);
   } catch (e) {
     console.error(e);

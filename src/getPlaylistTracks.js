@@ -52,14 +52,14 @@ export async function getPlaylistTracks(playlistId) {
   }
 
   try {
-    const response = await client
-      .post("browse", {
+    const response = await (
+      await client.post("browse", {
         json: {
           ...context.body,
           browseId,
         },
       })
-      .json();
+    ).json();
 
     return parseGetPlaylistTracksBody(response);
   } catch (error) {
@@ -75,12 +75,12 @@ export async function getPlaylistTracksContinuations(
   var jsonContext = { ...context.body };
   jsonContext.context.client.visitorData = visitorData;
   try {
-    const response = await client
-      .post("browse", {
+    const response = await (
+      await client.post("browse", {
         json: jsonContext,
         searchParams: { continuation },
       })
-      .json();
+    ).json();
 
     return parseGetPlaylistTracksBody(response, true, visitorData);
   } catch (error) {

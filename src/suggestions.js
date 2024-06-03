@@ -25,8 +25,8 @@ export const parseGetSuggestionsBody = (body) => {
 
 export async function getSuggestions(videoId) {
   try {
-    const response = await client
-      .post("next", {
+    const response = await (
+      await client.post("next", {
         json: {
           ...context.body,
           enablePersistentPlaylistPanel: true,
@@ -38,7 +38,7 @@ export async function getSuggestions(videoId) {
           videoId,
         },
       })
-      .json();
+    ).json();
 
     return parseGetSuggestionsBody(response);
   } catch {
