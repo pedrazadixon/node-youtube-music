@@ -40,6 +40,7 @@ import {
   getPlaylistTracks,
   searchArtists,
   getArtist,
+  getRankingsFromCountry
 } from "node-youtube-music";
 
 const musics = await searchTracks("Never gonna give you up");
@@ -59,4 +60,6 @@ const playlistSongs = await getPlaylistTracks(playlists[0].playlistId);
 const artists = await searchArtists("Daft Punk");
 
 const artist = await getArtist(artists[0].artistId);
+
+const rankings = await getRankingsFromCountry('CO')
 ```
